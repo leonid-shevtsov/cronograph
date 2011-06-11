@@ -1,0 +1,20 @@
+$def with (entry)
+
+<h1>cronograph</h1>
+
+<pre>
+  $entry['command_line']
+</pre>
+
+<dl>
+  <dt>Exit code</dt>
+  <dd>$entry['exit_code']</dd>
+</dl>
+
+<h2>Standard output</h2>
+
+<pre>$entry['stdout']</pre>
+
+<h2>Error output</h2>
+
+<pre>$entry['stderr']</pre>

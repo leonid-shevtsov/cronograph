@@ -6,7 +6,8 @@ def serve():
   sys.argv.pop(1)
 
   urls = (
-      '/', 'index'
+      '/', 'index',
+      '/cronjobs/(\d+)', 'show'
   )
   
   db.ensure_structure(db.spawn())
@@ -26,3 +27,7 @@ class Action:
 class index(Action):
   def GET(self):
     return self.render.index(self.db().execute('SELECT * FROM cronjobs'))
+
+class show(Action):
+  def GET(self, id):
+    return self.render.show(self.db().execute('SELECT * FROM cronjobs WHERE id=?', [id]).fetchone())

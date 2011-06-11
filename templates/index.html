@@ -17,7 +17,9 @@ $def with (entries)
         ${entry['duration']}s
       </td>
       <td>
-        $entry['command_line']
+        <a href="/cronjobs/$entry['id']">
+          $entry['command_line']
+        </a>
       </td>
     </tr>
 </table>
