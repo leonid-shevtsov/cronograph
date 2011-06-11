@@ -2,7 +2,6 @@
 import sys
 import os
 sys.path.append(os.path.dirname(__file__)+'/modules')
-from cronograph import server, cron
 
 def banner():
   print "cronograph - Collect, view and analyze cronjob execution logs"  
@@ -22,6 +21,8 @@ def banner():
 
 if __name__ == "__main__": 
   if len(sys.argv)>1 and sys.argv[1] == "serve":
+    from cronograph import server
     server.serve()
   else:
+    from cronograph import cron
     cron.handle()

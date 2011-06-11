@@ -12,17 +12,18 @@ def database_name():
 def ensure_structure(db):
   db.execute('''
     CREATE TABLE IF NOT EXISTS cronjobs (
-      start_time INTEGER NOT NULL,
-      end_time INTEGER NOT NULL,
-      command_line TEXT NOT NULL,
-      stdout TEXT NOT NULL,
-      stderr TEXT NOT NULL,
-      exit_code INTEGER NOT NULL
+      id integer PRIMARY KEY,
+      command_line text NOT NULL,
+      start_time timestamp NOT NULL,
+      duration integer NOT NULL,
+      stdout text NOT NULL,
+      stderr text NOT NULL,
+      exit_code integer NOT NULL
     )
   ''')
   return db
 
 def spawn():
-  db = sqlite3.connect(database_name())
+  db = sqlite3.connect(database_name(), detect_types=sqlite3.PARSE_DECLTYPES)
   db.row_factory = sqlite3.Row
   return db

@@ -1,8 +1,8 @@
 import db
 import sys
+import web
 
 def serve():
-  import web
   sys.argv.pop(1)
 
   urls = (
@@ -14,17 +14,15 @@ def serve():
   app = web.application(urls, globals())
   app.run()
 
-class Request:
+class Action:
   def __init__(self):
     self._db = None
+    self.render = web.template.render('templates', base='layout')
 
   def db(self):
     self._db = self._db or db.spawn()
     return self._db
 
-class index(Request):
+class index(Action):
   def GET(self):
-    result = ""
-    for row in self.db().execute('SELECT * FROM cronjobs'):
-      result += row['stdout']
-    return result
+    return self.render.index(self.db().execute('SELECT * FROM cronjobs'))

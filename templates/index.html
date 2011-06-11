@@ -1,0 +1,24 @@
+$def with (entries)
+
+<h1>cronograph</h1>
+
+<table class="entries" cellpadding="0" cellspacing="0" border="0">
+  <colgroup>
+    <col width="20%">
+    <col width="10%">
+    <col width="70%">
+  </colgroup>
+  $for entry in entries:
+    <tr class="${'red' if entry['exit_code']!=0 else 'yellow' if entry['stderr']!='' else 'green'}">
+      <td>
+        $entry['start_time']
+      </td>
+      <td>
+        ${entry['duration']}s
+      </td>
+      <td>
+        $entry['command_line']
+      </td>
+    </tr>
+</table>
+

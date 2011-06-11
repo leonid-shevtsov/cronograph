@@ -25,7 +25,7 @@ def handle():
   except OSError as (errno, strerror):
     err = strerror
 
-  end_time = datetime.now()
+  duration = (datetime.now() - start_time).seconds
 
   if process:
     out = process.stdout.read()
@@ -36,22 +36,22 @@ def handle():
     err = err or ""
     exit_code = -1
   
-  data = [' '.join(args), start_time, end_time, out, err, exit_code]
+  data = [' '.join(args), start_time, duration, out, err, exit_code]
   
-  database.execute('insert into cronjobs (command_line, start_time, end_time, stdout, stderr, exit_code) values(?, ?, ?, ?, ?, ?)', data)
+  database.execute('insert into cronjobs (command_line, start_time, duration, stdout, stderr, exit_code) values(?, ?, ?, ?, ?, ?)', data)
   database.commit()
 
   if should_notify_by_email(*data):
     print_email_notification(*data)
 
-def should_notify_by_email(command_line, start_time, end_time, out, err, exit_code):
+def should_notify_by_email(command_line, start_time, duration, out, err, exit_code):
   return exit_code != 0
 
-def print_email_notification(command_line, start_time, end_time, out, err, exit_code):
+def print_email_notification(command_line, start_time, duration, out, err, exit_code):
   print '''Cronograph recorded cronjob failing with return code {0}
 
 COMMAND LINE: {1}
-DURATION: {2}, started on {3}
+DURATION: {2}s, started on {3}
 
 ================
 ERROR OUTPUT:
@@ -60,4 +60,4 @@ ERROR OUTPUT:
 ================
 STANDARD OUTPUT:
 {5}
-'''.format(exit_code, command_line, end_time-start_time, start_time, err, out)
+'''.format(exit_code, command_line, duration, start_time, err, out)

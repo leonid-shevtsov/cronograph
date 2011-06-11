@@ -1,0 +1,19 @@
+body {
+  font-family: Arial;
+}
+
+table.entries {
+  width: 100%;
+}
+
+table.entries tr.red td {
+  background-color: #FD7D00;
+}
+
+table.entries tr.green td {
+  background-color: #90BD3C;
+}
+
+table.entries tr.yellow td {
+  background-color: #E1CE6C;
+}
