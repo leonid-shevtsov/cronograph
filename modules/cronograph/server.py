@@ -1,23 +1,30 @@
-from db import *
+import db
+import sys
 
 def serve():
   import web
-
   sys.argv.pop(1)
 
   urls = (
       '/', 'index'
   )
   
-  database_name = get_database_name()
-  ensure_db_structure(spawn_db(database_name))
+  db.ensure_structure(db.spawn())
 
-  class index:
-    def GET(self):
-      result = ""
-      for row in spawn_db(database_name).execute('SELECT * FROM cronjobs'):
-        result += row['stdout']
-      return result
-
-  app = web.application(urls, {'index': index})
+  app = web.application(urls, globals())
   app.run()
+
+class Request:
+  def __init__(self):
+    self._db = None
+
+  def db(self):
+    self._db = self._db or db.spawn()
+    return self._db
+
+class index(Request):
+  def GET(self):
+    result = ""
+    for row in self.db().execute('SELECT * FROM cronjobs'):
+      result += row['stdout']
+    return result

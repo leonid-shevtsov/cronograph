@@ -1,4 +1,5 @@
-from db import *
+import db
+import sys
 
 def handle():
   from subprocess import Popen, PIPE
@@ -8,9 +9,8 @@ def handle():
   out = None
   err = None
   exit_code = None
-
   
-  db = ensure_db_structure(spawn_db(get_database_name()))
+  database = db.ensure_structure(db.spawn()) 
 
   args = sys.argv
   args.pop(0)
@@ -38,8 +38,8 @@ def handle():
   
   data = [' '.join(args), start_time, end_time, out, err, exit_code]
   
-  db.execute('insert into cronjobs (command_line, start_time, end_time, stdout, stderr, exit_code) values(?, ?, ?, ?, ?, ?)', data)
-  db.commit()
+  database.execute('insert into cronjobs (command_line, start_time, end_time, stdout, stderr, exit_code) values(?, ?, ?, ?, ?, ?)', data)
+  database.commit()
 
   if should_notify_by_email(*data):
     print_email_notification(*data)

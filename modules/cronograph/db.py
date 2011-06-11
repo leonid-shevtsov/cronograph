@@ -2,10 +2,14 @@ import os
 import sys
 import sqlite3
 
-def get_database_name():
-  return sys.argv.pop(1) if len(sys.argv)>1 and sys.argv[1].endswith('.sqlite3') else os.path.expanduser('~/.cronograph.sqlite3')
+_database_name = None
 
-def ensure_db_structure(db):
+def database_name():
+  global _database_name
+  _database_name = _database_name or (sys.argv.pop(1) if len(sys.argv)>1 and sys.argv[1].endswith('.sqlite3') else os.path.expanduser('~/.cronograph.sqlite3'))
+  return _database_name
+
+def ensure_structure(db):
   db.execute('''
     CREATE TABLE IF NOT EXISTS cronjobs (
       start_time INTEGER NOT NULL,
@@ -18,7 +22,7 @@ def ensure_db_structure(db):
   ''')
   return db
 
-def spawn_db(database_name):
-  db = sqlite3.connect(database_name)
+def spawn():
+  db = sqlite3.connect(database_name())
   db.row_factory = sqlite3.Row
   return db
