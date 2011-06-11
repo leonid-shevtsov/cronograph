@@ -1,5 +1,6 @@
 import db
 import sys
+import pipes
 
 def handle():
   from subprocess import Popen, PIPE
@@ -36,13 +37,16 @@ def handle():
     err = err or ""
     exit_code = -1
   
-  data = [' '.join(args), start_time, duration, out, err, exit_code]
+  data = [build_command_line(args), start_time, duration, out, err, exit_code]
   
   database.execute('insert into cronjobs (command_line, start_time, duration, stdout, stderr, exit_code) values(?, ?, ?, ?, ?, ?)', data)
   database.commit()
 
   if should_notify_by_email(*data):
     print_email_notification(*data)
+
+def build_command_line(args):
+  return ' '.join([pipes.quote(a) for a in args])
 
 def should_notify_by_email(command_line, start_time, duration, out, err, exit_code):
   return exit_code != 0
