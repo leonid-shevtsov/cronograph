@@ -3,7 +3,21 @@ import sys
 import os.path
 import sqlite3
 
-database_name = None
+def banner():
+  print "cronograph - Collect, view and analyze cronjob execution logs"
+  print
+  print "cronograph [path-to-sqlite3-database] <cronjob>"
+  print "    Log execution of given <cronjob>"
+  print
+  print "cronograph serve [path-to-sqlite3-database] [port]"
+  print "    Start server on given port (default is 8080)"
+  print
+  print "Default database file used is ~/.cronograph.sqlite3"
+  print
+  print "Example crontab entry:"
+  print
+  print "0 0 * * * /home/user/bin/cronograph rsnapshot daily"
+  exit(1)
 
 def get_database_name():
   return sys.argv.pop(1) if len(sys.argv)>1 and sys.argv[1].endswith('.sqlite3') else os.path.expanduser('~/.cronograph.sqlite3')
@@ -64,8 +78,7 @@ def handle_cron():
   args.pop(0)
 
   if len(args)==0:
-    print "Need a command line in arguments"
-    exit(1)
+    banner()
 
   start_time = datetime.now()
   try:
