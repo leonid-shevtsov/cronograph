@@ -5,9 +5,7 @@ import sqlite3
 
 sys.path.append(os.path.dirname(__file__)+'/modules')
 
-from cronograph.server import serve
-from cronograph.cron import handle_cron
-from cronograph.db import ensure_db_structure, get_database_name, spawn_db
+from cronograph import server, cron
 
 def banner():
   print "cronograph - Collect, view and analyze cronjob execution logs"  
@@ -29,6 +27,6 @@ def banner():
 
 if __name__ == "__main__": 
   if len(sys.argv)>1 and sys.argv[1] == "serve":
-    serve()
+    server.serve()
   else:
-    handle_cron()
+    cron.handle()

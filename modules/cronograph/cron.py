@@ -1,6 +1,6 @@
 from db import *
 
-def handle_cron():
+def handle():
   from subprocess import Popen, PIPE
   from datetime import datetime
   
