@@ -62,6 +62,25 @@ def serve():
   app = web.application(urls, {'index': index})
   app.run()
 
+def should_notify_by_email(command_line, start_time, end_time, out, err, exit_code):
+  return exit_code != 0
+
+def print_email_notification(command_line, start_time, end_time, out, err, exit_code):
+  print '''Cronograph recorded cronjob failing with return code {0}
+
+COMMAND LINE: {1}
+DURATION: {2}, started on {3}
+
+================
+ERROR OUTPUT:
+{4}
+
+================
+STANDARD OUTPUT:
+{5}
+'''.format(exit_code, command_line, end_time-start_time, start_time, err, out)
+
+
 def handle_cron():
   from subprocess import Popen, PIPE
   from datetime import datetime
@@ -97,15 +116,15 @@ def handle_cron():
     out = out or ""
     err = err or ""
     exit_code = -1
-
   
-  c=db.cursor()
-  c.execute('insert into cronjobs (start_time, end_time, command_line, stdout, stderr, exit_code) values(?, ?, ?, ?, ?, ?)',
-      [start_time, end_time, ' '.join(args), out, err, exit_code]
-      )
+  data = [' '.join(args), start_time, end_time, out, err, exit_code]
+  
+  db.execute('insert into cronjobs (command_line, start_time, end_time, stdout, stderr, exit_code) values(?, ?, ?, ?, ?, ?)', data)
   db.commit()
-   
 
+  if should_notify_by_email(*data):
+    print_email_notification(*data)
+   
 
 #### MAIN
 
