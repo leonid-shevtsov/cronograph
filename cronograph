@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 import sys
-import os.path
-import sqlite3
-
+import os
 sys.path.append(os.path.dirname(__file__)+'/modules')
-
 from cronograph import server, cron
 
 def banner():
@@ -22,8 +19,6 @@ def banner():
   print
   print "0 0 * * * /home/user/bin/cronograph rsnapshot daily"
   exit(1)
-
-#### MAIN
 
 if __name__ == "__main__": 
   if len(sys.argv)>1 and sys.argv[1] == "serve":
