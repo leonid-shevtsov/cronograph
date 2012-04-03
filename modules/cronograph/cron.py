@@ -65,3 +65,20 @@ ERROR OUTPUT:
 STANDARD OUTPUT:
 {5}
 '''.format(exit_code, command_line, duration, start_time, err, out)
+
+def banner():
+  print "cronograph - Collect, view and analyze cronjob execution logs"  
+  print
+  print "cronograph [path-to-sqlite3-database] <cronjob>"
+  print "    Log execution of given <cronjob>"
+  print
+  print "cronograph serve [path-to-sqlite3-database] [port]"
+  print "    Start server on given port (default is 8080)"
+  print
+  print "Default database file used is ~/.cronograph.sqlite3"
+  print
+  print "Example crontab entry:"
+  print
+  print "0 0 * * * /home/user/bin/cronograph rsnapshot daily"
+  exit(1)
+

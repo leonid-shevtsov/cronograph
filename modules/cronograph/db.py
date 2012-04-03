@@ -21,6 +21,10 @@ def ensure_structure(db):
       exit_code integer NOT NULL
     )
   ''')
+
+  db.execute('''
+    CREATE INDEX IF NOT EXISTS cronjobs_start_time ON cronjobs(start_time)
+  ''')
   return db
 
 def spawn():
